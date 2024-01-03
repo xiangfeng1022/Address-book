@@ -16,7 +16,7 @@ typedef struct contact
 
 typedef struct addressBook
 {
-    contact contacts[DEFAULT_CONTANT];
+    contact * head;
     int size;
 } addressBook;
 
