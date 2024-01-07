@@ -38,6 +38,6 @@ int addressBookDelAppointVal(addressBook ** pTxl);
 int addressBookGetAppointVal(addressBook ** pTxl);
 
 /* 通讯录中修改指定的指定数据 */
-int addressBookModify(addressBook ** pTxl);
+int addressBookModify(addressBook * pTxl, char *name, char *phone, char *address);
 
 #endif //__ADDRESS_BOOK_H_
