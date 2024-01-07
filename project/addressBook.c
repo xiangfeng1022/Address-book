@@ -9,6 +9,7 @@ enum STATUS_CODE
     ON_SUCCESS,
     MALLOC_ERROR,
     NULL_PTR,
+    ILLEGAL_ACCESS,
 }; 
 
 /* 判断传入指针是否正确 */
@@ -28,6 +29,12 @@ do {                                 \
         }                            \
 }while(0)
 
+
+/* 静态函数前置声明 */
+/* 根据指定的名字获取位置 */
+static int addressBookGetPosAppointVal(addressBook * pTxl, char * pVal, int * pPos);
+/* 删除指定位置的结点 */
+static int delNodeAppointPos(addressBook * pTxl, int pos);
 
 /* 通讯录的初始化 */
 int addressBookInit(addressBook ** pTxl)
@@ -53,13 +60,69 @@ int addressBookInit(addressBook ** pTxl)
 int addressBookInsert(addressBook ** pTxl)
 {
 
+}
+
+/* 根据指定的名字获取位置 */
+static int addressBookGetPosAppointVal(addressBook * pTxl, char * pVal, int * pPos)
+{
+    int val = *pVal;
+
+    /* 从第一个结点开始遍历 */
+    contactNode * travelNode = pTxl->head->next;
+    int pos = 0;
+
+    while (strcmp(pVal, travelNode->name))
+    {
+        travelNode = travelNode->next;
+        pos++;
+    }
+
+    /* 得到需要删除的结点位置 */
+    *pPos = pos + 1;
+
+    if (pos)
+    {
+        return pos + 1;
+    }
+    
+    return 0;
+}
+
+/* 删除指定位置的结点 */
+static int delNodeAppointPos(addressBook * pTxl, int pos)
+{
+    if (pos <= 0 || pos > pTxl->size)
+    {
+        return ILLEGAL_ACCESS;
+    }
+
+    contactNode * preNode = pTxl->head;
+
+    /* 找到删除结点的前驱 */
+    while (--pos)
+    {
+        preNode = preNode->next;
+    }
+
+    /* 删除结点是尾结点 */
+    if (pos == pTxl->size)
+    {
+        pTxl->tail = preNode;
+    }
+
+    preNode->next = preNode->next->next;
+
     return ON_SUCCESS;
 }
 
 /* 通讯录中删除数据 */
-int addressBookDelAppointVal(addressBook ** pTxl)
+int addressBookDelAppointVal(addressBook * pTxl, char * pVal)
 {
+    CHECK_PTR(pTxl);
 
+    int pos = 0;
+
+    return delNodeAppointPos(pTxl, addressBookGetPosAppointVal(pTxl, pVal, pos));
 }
 
 /* 通讯录中查询指定的数据 */

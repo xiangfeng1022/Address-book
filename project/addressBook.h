@@ -32,7 +32,7 @@ int addressBookInit(addressBook ** pTxl);
 int addressBookInsert(addressBook ** pTxl);
 
 /* 通讯录中删除数据 */
-int addressBookDelAppointVal(addressBook ** pTxl);
+int addressBookDelAppointVal(addressBook * pTxl, char * pVal);
 
 /* 通讯录中查询指定的数据 */
 int addressBookGetAppointVal(addressBook ** pTxl);
