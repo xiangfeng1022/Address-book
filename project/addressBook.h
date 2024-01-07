@@ -34,8 +34,9 @@ int addressBookInsert(addressBook ** pTxl);
 /* 通讯录中删除数据 */
 int addressBookDelAppointVal(addressBook ** pTxl);
 
+
 /* 通讯录中查询指定的数据 */
-int addressBookGetAppointVal(addressBook ** pTxl);
+int addressBookGetAppointVal(addressBook * pTxl, char *name, char *phone, char *address);
 
 /* 通讯录中修改指定的指定数据 */
 int addressBookModify(addressBook ** pTxl);
