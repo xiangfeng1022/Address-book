@@ -53,6 +53,7 @@ int addressBookInit(addressBook ** pTxl)
 int addressBookInsert(addressBook ** pTxl)
 {
 
+    return ON_SUCCESS;
 }
 
 /* 通讯录中删除数据 */
