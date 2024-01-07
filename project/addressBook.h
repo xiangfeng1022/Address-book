@@ -4,19 +4,23 @@
 #define DEFAULT_NAME    20
 #define DEFAULT_PHONE   12
 #define DEFAULT_ADDRESS 30
-#define DEFAULT_CONTANT 30
 
 /* 定义通讯录结构体 */
-typedef struct contact
+typedef struct contactNode
 {
     char name[DEFAULT_NAME];
     char phone[DEFAULT_PHONE];
     char address[DEFAULT_ADDRESS];
-} contact;
+    struct contactNode * next;
+} contactNode;
 
 typedef struct addressBook
 {
-    contact * head;
+    /* 头指针 */
+    contactNode * head;
+    /* 尾指针 */
+    contactNode * tail;
+    /* 通讯录大小 */
     int size;
 } addressBook;
 
