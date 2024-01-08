@@ -32,20 +32,13 @@ int addressBookInit(addressBook ** pTxl);
 int addressBookInsert(addressBook *pTxl, char *name, char *phone, char *address);
 
 /* 通讯录中删除数据 */
-<<<<<<< HEAD
 int addressBookDelAppointVal(addressBook * pTxl, char * pVal);
 
 
 /* 通讯录中查询指定的数据 */
 int addressBookGetAppointVal(addressBook * pTxl, char *name, char *phone, char *address);
-=======
-int addressBookDelAppointVal(addressBook *pTxl);
-
-/* 通讯录中查询指定的数据 */
-int addressBookGetAppointVal(addressBook *pTxl);
->>>>>>> xf
 
 /* 通讯录中修改指定的指定数据 */
-int addressBookModify(addressBook *pTxl);
+int addressBookModify(addressBook * pTxl, char *name, char *phone, char *address);
 
 #endif //__ADDRESS_BOOK_H_

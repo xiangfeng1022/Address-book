@@ -9,7 +9,6 @@ enum STATUS_CODE
     ON_SUCCESS,
     MALLOC_ERROR,
     NULL_PTR,
-<<<<<<< HEAD
     INVALID_ACCESS,
     NOT_FIND,
     EDIT_FAIL,
@@ -23,20 +22,6 @@ do {                            \
         }                       \
 }while(0)
 
-=======
-};
-
-/* 判断传入指针是否正确 */
-#define CHECK_PTR(ptr)       \
-    do                       \
-    {                        \
-        if (!ptr)            \
-        {                    \
-            \       
-            return NULL_PTR; \
-        }                    \
-    } while (0)
->>>>>>> xf
 
 /* 判断分配空间是否正确 */
 #define CHECK_MALLOC(ptr)        \
@@ -102,7 +87,6 @@ int addressBookInsert(addressBook *pTxl, char *name, char *phone, char *address)
     
 }
 
-<<<<<<< HEAD
 /* 根据指定的名字获取位置 */
 static int addressBookGetPosAppointVal(addressBook * pTxl, char * pVal, int * pPos)
 {
@@ -270,21 +254,48 @@ int addressBookGetAppointVal(addressBook * pTxl, char *name, char *phone, char *
         return EDIT_FAIL;
     }
     return ON_SUCCESS;
-=======
-/* 通讯录中删除数据 */
-int addressBookDelAppointVal(addressBook *pTxl)
-{
-}
-
-/* 通讯录中查询指定的数据 */
-int addressBookGetAppointVal(addressBook *pTxl)
-{
->>>>>>> xf
 }
 
 
 
 /* 通讯录中修改指定的指定数据 */
-int addressBookModify(addressBook *pTxl)
+int addressBookModify(addressBook * pTxl, char *name, char *phone, char *address)
 {
+    int pos = 0;
+    if(name)
+    {
+        contactNode *travelNode = pTxl->head;
+        addressBookGetAppointNamePos(pTxl, name, pos);
+        while(--pos)
+        {
+            travelNode = travelNode->next;
+        }
+        strncpy(travelNode->name, name, strlen(name));
+    }
+    else if(phone)
+    {
+        contactNode *travelNode = pTxl->head;
+        addressBookGetAppointNamePos(pTxl, phone, pos);
+        while(--pos)
+        {
+            travelNode = travelNode->next;
+        }
+        strncpy(travelNode->phone, phone, strlen(phone));
+    }
+    else if(address)
+    {
+        contactNode *travelNode = pTxl->head;
+        addressBookGetAppointNamePos(pTxl, address, pos);
+        while(--pos)
+        {
+            travelNode = travelNode->next;
+        }
+        strncpy(travelNode->address, address, strlen(address));
+    }
+    else
+    {
+        printf("未填写有效的修改信息\n");
+        return EDIT_FAIL;
+    }
+    return ON_SUCCESS;
 }
