@@ -1,16 +1,15 @@
 #ifndef __ADDRESS_BOOK_H_
 #define __ADDRESS_BOOK_H_
 
-#define DEFAULT_NAME    20
-#define DEFAULT_PHONE   12
-#define DEFAULT_ADDRESS 30
+#define DEFAULT_SIZE    30
+
 
 /* 定义通讯录结构体 */
 typedef struct contactNode
 {
-    char name[DEFAULT_NAME];
-    char phone[DEFAULT_PHONE];
-    char address[DEFAULT_ADDRESS];
+    char name[DEFAULT_SIZE];
+    char phone[DEFAULT_SIZE];
+    char address[DEFAULT_SIZE];
     struct contactNode * next;
 } contactNode;
 
@@ -38,14 +37,12 @@ int addressBookInit(addressBook ** pTxl);
 int addressBookInsert(addressBook *pTxl, char *name, char *phone, char *address);
 
 /* 通讯录中删除数据 */
-int addressBookDelAppointVal(addressBook * pTxl, char * pVal);
-
+int addressBookDelAppointVal(addressBook * pTxl, char * string, OPTION_PARAM OPTION_PARAM);
 
 /* 通讯录中查询指定的数据 */
 int addressBookGetAppointVal(addressBook * pTxl, char *string, OPTION_PARAM OPTION_PARAM);
-// int addressBookGetAppointVal(addressBook * pTxl, char *name, char *phone, char *address);
 
 /* 通讯录中修改指定的指定数据 */
-int addressBookModify(addressBook * pTxl, char *name, char *phone, char *address);
+int addressBookModify(addressBook * pTxl, char *string, char * modifyVal, OPTION_PARAM OPTION_PARAM);
 
 #endif //__ADDRESS_BOOK_H_

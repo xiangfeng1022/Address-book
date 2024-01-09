@@ -40,7 +40,7 @@ do                           \
 /* 删除指定位置的结点 */
 static int delNodeAppointPos(addressBook * pTxl, int pos);
 /* 根据指定的名字获取位置 */
-static int addressBookGetPosAppointVal(addressBook * pTxl, char * pVal, int * pPos);
+static int addressBookGetPosAppointValAccordingName(addressBook * pTxl, char * pVal, int * pPos);
 /* 找到指定phone所在的位置 */
 static int addressBookGetAppointPhonePos(addressBook *pTxl, char *phone, int *pPos);
 /* 找到指定address所在的位置 */
@@ -76,15 +76,19 @@ int addressBookInsert(addressBook *pTxl, char *name, char *phone, char *address)
         return MALLOC_ERROR;
     }
     memset(newNode, 0, sizeof(contactNode) * 1);
+    memset(newNode->name, 0, sizeof(DEFAULT_SIZE));
+    memset(newNode->phone, 0, sizeof(DEFAULT_SIZE));
+    memset(newNode->address, 0, sizeof(DEFAULT_SIZE));
 
-    strncpy(newNode->name, name, DEFAULT_NAME - 1);
-    newNode->name[DEFAULT_NAME - 1] = '\0';
 
-    strncpy(newNode->phone, phone, DEFAULT_PHONE - 1);
-    newNode->name[DEFAULT_PHONE - 1] = '\0';
+    strncpy(newNode->name, name, DEFAULT_SIZE - 1);
+    // newNode->name[DEFAULT_NAME - 1] = '\0';
 
-    strncpy(newNode->address, address, DEFAULT_ADDRESS - 1);
-    newNode->name[DEFAULT_ADDRESS - 1] = '\0';
+    strncpy(newNode->phone, phone, DEFAULT_SIZE - 1);
+    // newNode->name[DEFAULT_PHONE - 1] = '\0';
+
+    strncpy(newNode->address, address, DEFAULT_SIZE - 1);
+    // newNode->name[DEFAULT_ADDRESS - 1] = '\0';
     
     pTxl->tail->next = newNode;
     pTxl->tail = newNode;
@@ -94,7 +98,7 @@ int addressBookInsert(addressBook *pTxl, char *name, char *phone, char *address)
 }
 
 /* 根据指定的名字获取位置 */
-int addressBookGetPosAppointVal(addressBook * pTxl, char * pVal, int * pPos)
+int addressBookGetPosAppointValAccordingName(addressBook * pTxl, char * pVal, int * pPos)
 {
     int val = *pVal;
 
@@ -122,13 +126,15 @@ static int delNodeAppointPos(addressBook * pTxl, int pos)
 {
     if (pos <= 0 || pos > pTxl->size)
     {
+        printf("请输入合法数据\n");
         return INVALID_ACCESS;
     }
 
     contactNode * preNode = pTxl->head;
 
+    int internal_pos = pos;
     /* 找到删除结点的前驱 */
-    while (--pos)
+    while (--internal_pos)
     {
         preNode = preNode->next;
     }
@@ -141,17 +147,35 @@ static int delNodeAppointPos(addressBook * pTxl, int pos)
 
     preNode->next = preNode->next->next;
 
+    pTxl->size--;
+
     return ON_SUCCESS;
 }
 
 /* 通讯录中删除数据 */
-int addressBookDelAppointVal(addressBook * pTxl, char * pVal)
+int addressBookDelAppointVal(addressBook * pTxl, char * string, OPTION_PARAM OPTION_PARAM)
 {
     CHECK_PTR(pTxl);
 
     int pos = 0;
+    if (OPTION_PARAM == NAME)
+    {
+        delNodeAppointPos(pTxl, addressBookGetPosAppointValAccordingName(pTxl, string, &pos));
+    }
+    else if (OPTION_PARAM == PHONE)
+    {
+        delNodeAppointPos(pTxl, addressBookGetAppointPhonePos(pTxl, string, &pos));
+    }
+    else if (OPTION_PARAM == ADDRESS)
+    {   
+        delNodeAppointPos(pTxl, addressBookGetAppointAddressPos(pTxl, string, &pos));
+    }
+    else
+    {
+        printf("请输入合法数据\n");
+    }
 
-    return delNodeAppointPos(pTxl, addressBookGetPosAppointVal(pTxl, pVal, &pos));
+    return ON_SUCCESS;
 }
 
 
@@ -213,11 +237,10 @@ int addressBookGetAppointVal(addressBook * pTxl, char *string, OPTION_PARAM OPTI
 {
     int pos = 0;
 
-    if(NAME)
+    if(OPTION_PARAM == NAME)
     {
-        char * name = string;
         contactNode *travelNode = pTxl->head;
-        addressBookGetPosAppointVal(pTxl, name, &pos);
+        addressBookGetPosAppointValAccordingName(pTxl, string, &pos);
 
         if (pos <= 0)
         {
@@ -231,11 +254,10 @@ int addressBookGetAppointVal(addressBook * pTxl, char *string, OPTION_PARAM OPTI
         }
         printf("%s的address是: %s, phone是: %s\n", string, travelNode->address, travelNode->phone);
     }
-    else if(PHONE)
+    else if(OPTION_PARAM == PHONE)
     {
-        char * phone = string;
         contactNode *travelNode = pTxl->head;
-        addressBookGetAppointPhonePos(pTxl, phone, &pos);
+        addressBookGetAppointPhonePos(pTxl, string, &pos);
 
         if (pos <= 0)
         {
@@ -249,11 +271,10 @@ int addressBookGetAppointVal(addressBook * pTxl, char *string, OPTION_PARAM OPTI
         }
         printf("%s的name是: %s, address是: %s\n", string, travelNode->name, travelNode->address);
     }
-    else if(ADDRESS)
+    else if(OPTION_PARAM == ADDRESS)
     {
-        char * address = string;
         contactNode *travelNode = pTxl->head;
-        addressBookGetAppointAddressPos(pTxl, address, &pos);
+        addressBookGetAppointAddressPos(pTxl, string, &pos);
 
         /* 判断是否找到联系人 */
         if (pos <= 0)
@@ -280,43 +301,66 @@ int addressBookGetAppointVal(addressBook * pTxl, char *string, OPTION_PARAM OPTI
 
 
 /* 通讯录中修改指定的指定数据 */
-// int addressBookModify(addressBook * pTxl, char *name, char *phone, char *address)
-// {
-//     int pos = 0;
-//     if(name)
-//     {
-//         contactNode *travelNode = pTxl->head;
-//         addressBookGetPosAppointVal(pTxl, name, &pos);
-//         while(--pos)
-//         {
-//             travelNode = travelNode->next;
-//         }
-//         strncpy(travelNode->name, name, strlen(name));
-//     }
-//     else if(phone)
-//     {
-//         contactNode *travelNode = pTxl->head;
-//         addressBookGetAppointPhonePos(pTxl, phone, &pos);
-//         while(--pos)
-//         {
-//             travelNode = travelNode->next;
-//         }
-//         strncpy(travelNode->phone, phone, strlen(phone));
-//     }
-//     else if(address)
-//     {
-//         contactNode *travelNode = pTxl->head;
-//         addressBookGetAppointAddressPos(pTxl, address, &pos);
-//         while(--pos)
-//         {
-//             travelNode = travelNode->next;
-//         }
-//         strncpy(travelNode->address, address, strlen(address));
-//     }
-//     else
-//     {
-//         printf("未填写有效的修改信息\n");
-//         return EDIT_FAIL;
-//     }
-//     return ON_SUCCESS;
-// }
+int addressBookModify(addressBook * pTxl, char *string, char * modifyVal, OPTION_PARAM OPTION_PARAM)
+{
+    int pos = 0;
+    if(OPTION_PARAM == NAME)
+    {
+        contactNode *travelNode = pTxl->head;
+        addressBookGetPosAppointValAccordingName(pTxl, string, &pos);
+
+        if (pos <= 0)
+        {
+            printf("请输入想要修改的正确的数据\n");
+            return EDIT_FAIL;
+        }
+
+        while(pos--)
+        {
+            travelNode = travelNode->next;
+        }
+        strncpy(travelNode->name, modifyVal, strlen(modifyVal));
+    }
+    else if(OPTION_PARAM == PHONE)
+    {
+        contactNode *travelNode = pTxl->head;
+        addressBookGetAppointPhonePos(pTxl, string, &pos);
+
+        if (pos <= 0)
+        {
+            printf("请输入想要修改的正确的数据\n");
+            return EDIT_FAIL;
+        }
+
+        while(pos--)
+        {
+            travelNode = travelNode->next;
+        }
+        strncpy(travelNode->phone, modifyVal, strlen(modifyVal));
+    }
+    else if(OPTION_PARAM == ADDRESS)
+    {
+        contactNode *travelNode = pTxl->head;
+        addressBookGetAppointAddressPos(pTxl, string, &pos);
+
+        if (pos <= 0)
+        {
+            printf("请输入想要修改的正确的数据\n");
+            return EDIT_FAIL;
+        }
+
+        while(pos--)
+        {
+            travelNode = travelNode->next;
+        }
+        
+        strncpy(travelNode->address, modifyVal, strlen(modifyVal));
+    }
+    else
+    {
+        printf("未填写有效的修改信息\n");
+        return EDIT_FAIL;
+    }
+
+    return ON_SUCCESS;
+}
