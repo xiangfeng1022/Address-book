@@ -24,6 +24,12 @@ typedef struct addressBook
     int size;
 } addressBook;
 
+typedef enum OPTION_PARAM
+{
+    NAME = 1,
+    ADDRESS,
+    PHONE,
+} OPTION_PARAM;
 
 /* 通讯录的初始化 */
 int addressBookInit(addressBook ** pTxl);
@@ -36,7 +42,8 @@ int addressBookDelAppointVal(addressBook * pTxl, char * pVal);
 
 
 /* 通讯录中查询指定的数据 */
-int addressBookGetAppointVal(addressBook * pTxl, char *name, char *phone, char *address);
+int addressBookGetAppointVal(addressBook * pTxl, char *string, OPTION_PARAM OPTION_PARAM);
+// int addressBookGetAppointVal(addressBook * pTxl, char *name, char *phone, char *address);
 
 /* 通讯录中修改指定的指定数据 */
 int addressBookModify(addressBook * pTxl, char *name, char *phone, char *address);
