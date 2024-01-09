@@ -34,12 +34,12 @@ int main()
 
 
     /* 修改数据 */
-    addressBookModify(book, "张三", "李宁", NAME);
-    addressBookModify(book, "200108192718", "19146650217", PHONE);
+    // addressBookModify(book, "张三", "李宁", NAME);
+    // addressBookModify(book, "200108192718", "19146650217", PHONE);
 
-    travelNode = book->head->next;
-    printf("name: %s, phone : %s, address : %s\n", travelNode->name, travelNode->phone, travelNode->address);
-    printf("size: %d\n", book->size);
+    // travelNode = book->head->next;
+    // printf("name: %s, phone : %s, address : %s\n", travelNode->name, travelNode->phone, travelNode->address);
+    // printf("size: %d\n", book->size);
 
 
     return 0;

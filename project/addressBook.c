@@ -45,6 +45,12 @@ static int addressBookGetPosAppointValAccordingName(addressBook * pTxl, char * p
 static int addressBookGetAppointPhonePos(addressBook *pTxl, char *phone, int *pPos);
 /* 找到指定address所在的位置 */
 static int addressBookGetAppointAddressPos(addressBook *pTxl, char *address, int *pPos);
+/* 找到插入位置 */
+static int getInsertPos(addressBook *pTxl, char *pName, int* pPos);
+/* 在指定位置插入数据 */
+static int inserterDta(addressBook *pTxl, char *name, char *phone, char *address, int pos);
+
+
 
 /* 通讯录的初始化 */
 int addressBookInit(addressBook **pTxl)
@@ -66,10 +72,80 @@ int addressBookInit(addressBook **pTxl)
     return ON_SUCCESS;
 }
 
+/* 找到插入位置 */
+static int getInsertPos(addressBook *pTxl, char *pName, int* pPos)
+{
+    int cmp = 0;
+    
+    int pos = 0;
+
+    contactNode * travelNode = pTxl->head->next;
+    while (travelNode)
+    {
+        cmp = strcmp(pName, travelNode->name);
+        if (cmp > 0)
+        {
+            *pPos = pos;
+            return pos;
+        }
+        pos++;
+        travelNode = travelNode->next;
+    }
+
+    /* 若链表中存储的所有数据都比新插入的数据小，则插入位置为末尾 */
+    *pPos = pTxl->size;
+    return pTxl->size;
+}
+
+/* 在指定位置插入数据 */
+static int inserterDta(addressBook *pTxl, char *name, char *phone, char *address, int pos)
+{
+    contactNode * travelNode = pTxl->head;
+
+    int internal_pos = 0;
+
+    while (pos--)
+    {
+        travelNode = travelNode->next;
+    }
+
+    contactNode *newNode = (contactNode *)malloc(sizeof(contactNode) * 1);
+    CHECK_MALLOC(newNode);
+    memset(newNode, 0, sizeof(contactNode) * 1);
+    memset(newNode->name, 0, sizeof(DEFAULT_SIZE));
+    memset(newNode->phone, 0, sizeof(DEFAULT_SIZE));
+    memset(newNode->address, 0, sizeof(DEFAULT_SIZE));
+
+    strncpy(newNode->name, name, DEFAULT_SIZE - 1);
+    // newNode->name[DEFAULT_NAME - 1] = '\0';
+
+    strncpy(newNode->phone, phone, DEFAULT_SIZE - 1);
+    // newNode->name[DEFAULT_PHONE - 1] = '\0';
+
+    strncpy(newNode->address, address, DEFAULT_SIZE - 1);
+    // newNode->name[DEFAULT_ADDRESS - 1] = '\0';
+
+    if (pos == pTxl->size)
+    {
+        pTxl->tail = newNode;
+    }
+
+    newNode->next = travelNode->next;
+    travelNode->next = newNode;
+
+    (pTxl->size)++;
+
+    return ON_SUCCESS;
+}
+
 /* 通讯录中插入数据 */
 int addressBookInsert(addressBook *pTxl, char *name, char *phone, char *address)
 {
     CHECK_PTR(pTxl);
+
+    int pos = 0;
+
+#if 0
     contactNode *newNode = (contactNode *)malloc(sizeof(contactNode) * 1);
     if (newNode == NULL)
     {
@@ -94,7 +170,9 @@ int addressBookInsert(addressBook *pTxl, char *name, char *phone, char *address)
     pTxl->tail = newNode;
     
     (pTxl->size)++;
-    
+#endif 
+
+    return inserterDta(pTxl, name, phone, address, getInsertPos(pTxl, name, &pos));
 }
 
 /* 根据指定的名字获取位置 */
@@ -353,7 +431,7 @@ int addressBookModify(addressBook * pTxl, char *string, char * modifyVal, OPTION
         {
             travelNode = travelNode->next;
         }
-        
+
         strncpy(travelNode->address, modifyVal, strlen(modifyVal));
     }
     else
