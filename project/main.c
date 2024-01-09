@@ -12,13 +12,7 @@ int main()
     addressBookInsert(book, "李四", "12345678", "四川省");
     addressBookInsert(book, "王五", "20010818719", "河南省");
 
-    contactNode * travelNode = book->head->next;
-    printf("name: %s, phone : %s, address : %s\n", travelNode->name, travelNode->phone, travelNode->address);
-    travelNode = travelNode->next;
-    printf("name: %s, phone : %s, address : %s\n", travelNode->name, travelNode->phone, travelNode->address);
-    travelNode = travelNode->next;
-
-    printf("name: %s, phone : %s, address : %s\n", travelNode->name, travelNode->phone, travelNode->address);
+    addressBookForeach(book);
 
     printf("\n");
 

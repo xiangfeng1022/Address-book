@@ -45,4 +45,7 @@ int addressBookGetAppointVal(addressBook * pTxl, char *string, OPTION_PARAM OPTI
 /* 通讯录中修改指定的指定数据 */
 int addressBookModify(addressBook * pTxl, char *string, char * modifyVal, OPTION_PARAM OPTION_PARAM);
 
+/* 遍历接口 */
+int addressBookForeach(addressBook * pTxl);
+
 #endif //__ADDRESS_BOOK_H_

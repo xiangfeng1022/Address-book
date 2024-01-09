@@ -442,3 +442,17 @@ int addressBookModify(addressBook * pTxl, char *string, char * modifyVal, OPTION
 
     return ON_SUCCESS;
 }
+
+/* 遍历接口 */
+int addressBookForeach(addressBook * pTxl)
+{
+    contactNode * currentNode = pTxl->head->next;
+
+    while (currentNode)
+    {   
+        printf("Name: %s, Phone: %s, Address: %s\n", currentNode->name, currentNode->phone, currentNode->address);
+        currentNode = currentNode->next;
+    }
+    
+    return ON_SUCCESS;
+}
