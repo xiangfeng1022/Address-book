@@ -102,9 +102,9 @@ static int inserterDta(addressBook *pTxl, char *name, char *phone, char *address
 {
     contactNode * travelNode = pTxl->head;
 
-    int internal_pos = 0;
+    int internal_pos = pos;
 
-    while (pos--)
+    while (internal_pos--)
     {
         travelNode = travelNode->next;
     }
