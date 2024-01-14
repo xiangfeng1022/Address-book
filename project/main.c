@@ -245,6 +245,7 @@ int main()
         /* 退出通讯录 */
         if (choice == 5)
         {
+            saveAddressBook(book);
             break;
         }
     }

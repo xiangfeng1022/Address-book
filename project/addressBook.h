@@ -48,4 +48,7 @@ int addressBookModify(addressBook * pTxl, char *string, char * modifyVal, OPTION
 /* 遍历接口 */
 int addressBookForeach(addressBook * pTxl);
 
+/* 将数据保存在文件中 */
+int saveAddressBook(addressBook * pTxl);
+
 #endif //__ADDRESS_BOOK_H_

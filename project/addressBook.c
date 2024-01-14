@@ -2,6 +2,7 @@
 #include "addressBook.h"
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 /* 状态码 */
 enum STATUS_CODE
@@ -454,5 +455,32 @@ int addressBookForeach(addressBook * pTxl)
         currentNode = currentNode->next;
     }
     
+    return ON_SUCCESS;
+}
+
+/* 将数据保存在文件中 */
+int saveAddressBook(addressBook * pTxl)
+{
+    CHECK_PTR(pTxl);
+
+    /* 文件保存,若没有则创建 */
+    FILE * fd = fopen("addressBook.bak", "wb");
+    if (!fd)
+    {
+        perror("fopen error");
+        _exit(-1);
+    }
+
+    /* 开始遍历链表 */
+    contactNode * travelNode = pTxl->head->next;
+    
+    while (travelNode)
+    {
+        fwrite(travelNode, sizeof(contactNode), 1, fd);
+        travelNode = travelNode->next;
+    }
+
+    fclose(fd);
+
     return ON_SUCCESS;
 }
