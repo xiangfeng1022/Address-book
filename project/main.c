@@ -47,6 +47,9 @@ int main()
 
     addressBookInit(&book);
 
+    /* 将文件中内容读取到通讯录中 */
+    readAddressBook(book);
+
     /* 打开首页菜单 */
     int fd = open("./splashScreens", O_RDONLY);
     char buffer[READ_BUFFER300];
@@ -71,8 +74,6 @@ int main()
     memset(modifyBuffer, 0, sizeof(modifyBuffer));
     ssize_t bytes = read(modifyFd, modifyBuffer, sizeof(modifyBuffer) - 1);
     printf("bytes: %ld\n", bytes);
-
-    /* 打开删除信息页面 */
 
 
     int choice = 0;

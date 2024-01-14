@@ -51,4 +51,7 @@ int addressBookForeach(addressBook * pTxl);
 /* 将数据保存在文件中 */
 int saveAddressBook(addressBook * pTxl);
 
+/* 将数据从文件中读取出来 */
+int readAddressBook(addressBook * pTxl);
+
 #endif //__ADDRESS_BOOK_H_

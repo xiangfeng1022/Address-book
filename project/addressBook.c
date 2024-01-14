@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
 
 /* 状态码 */
 enum STATUS_CODE
@@ -469,6 +470,7 @@ int saveAddressBook(addressBook * pTxl)
     {
         perror("fopen error");
         _exit(-1);
+        return INVALID_ACCESS;
     }
 
     /* 开始遍历链表 */
@@ -478,6 +480,47 @@ int saveAddressBook(addressBook * pTxl)
     {
         fwrite(travelNode, sizeof(contactNode), 1, fd);
         travelNode = travelNode->next;
+    }
+
+    fclose(fd);
+
+    return ON_SUCCESS;
+}
+
+/* 将数据从文件中读取出来 */
+int readAddressBook(addressBook * pTxl)
+{
+    /* 判空 */
+    CHECK_PTR(pTxl);
+
+    /* 打开文件 */
+    FILE * fd = fopen("addressBook.bak", "rb+");
+    if (!fd)
+    {
+        perror("fopen error");
+        _exit(-1);
+        return INVALID_ACCESS;
+    }
+
+    /* 判断文件是否内容为空 */
+    if (fseek(fd, 0, SEEK_END) != 0)
+    {
+        perror("fseek error");
+        fclose(fd);
+        _exit(-2);
+        return INVALID_ACCESS;
+    }
+
+    int size = ftell(fd);
+    /* 接收数据 */
+    contactNode readDtata;
+    for (int idx = 0; idx < (size / sizeof(contactNode)); idx++)
+    {
+        fseek(fd, sizeof(contactNode) * idx, SEEK_SET);
+        fread(&readDtata, sizeof(contactNode), 1, fd);
+        /* 插入数据 */
+        addressBookInsert(pTxl, readDtata.name, readDtata.phone, readDtata.address);
+
     }
 
     fclose(fd);
