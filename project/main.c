@@ -15,7 +15,8 @@ enum USER_CHOICE
     INSERTE = 1,
     QUERY,
     MODIFY,
-    DELETE
+    DELETE,
+    EXIT,
 };
 
 /* 查询的两种类型 */
@@ -23,6 +24,7 @@ enum USER_QUERY
 {
     QUERY_ALL = 1,
     QUERY_APPOINT,
+    EXIT,
 };
 
 /* 查询依据 */
@@ -73,7 +75,6 @@ int main()
     char modifyBuffer[READ_BUFFER300];
     memset(modifyBuffer, 0, sizeof(modifyBuffer));
     ssize_t bytes = read(modifyFd, modifyBuffer, sizeof(modifyBuffer) - 1);
-    printf("bytes: %ld\n", bytes);
 
 
     int choice = 0;
@@ -176,7 +177,7 @@ int main()
                     break;
                 
                 }
-                if (query == 3)
+                if (query == EXIT)
                 {
                     break;
                 }
@@ -244,7 +245,7 @@ int main()
         }
 
         /* 退出通讯录 */
-        if (choice == 5)
+        if (choice == EXIT)
         {
             saveAddressBook(book);
             break;
