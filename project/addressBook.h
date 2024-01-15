@@ -54,4 +54,7 @@ int saveAddressBook(addressBook * pTxl);
 /* 将数据从文件中读取出来 */
 int readAddressBook(addressBook * pTxl);
 
+/* 销毁通讯录 */
+int addressBookDestroy(addressBook * pTxl);
+
 #endif //__ADDRESS_BOOK_H_

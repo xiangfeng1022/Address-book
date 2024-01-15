@@ -84,8 +84,8 @@ static int getInsertPos(addressBook *pTxl, char *pName, int* pPos)
     contactNode * travelNode = pTxl->head->next;
     while (travelNode)
     {
-        cmp = strcmp(pName, travelNode->name);
-        if (cmp > 0)
+        cmp = strncmp(pName, travelNode->name, DEFAULT_SIZE);
+        if (cmp < 0)
         {
             *pPos = pos;
             return pos;
@@ -225,7 +225,15 @@ static int delNodeAppointPos(addressBook * pTxl, int pos)
         pTxl->tail = preNode;
     }
 
-    preNode->next = preNode->next->next;
+    contactNode * delNode = preNode->next;
+
+    preNode->next = delNode->next;
+
+    if (delNode)
+    {
+        free(delNode);
+        delNode = NULL;
+    }
 
     pTxl->size--;
 
@@ -494,7 +502,7 @@ int readAddressBook(addressBook * pTxl)
     CHECK_PTR(pTxl);
 
     /* 打开文件 */
-    FILE * fd = fopen("addressBook.bak", "rb+");
+    FILE * fd = fopen("addressBook.bak", "wb+");
     if (!fd)
     {
         perror("fopen error");
@@ -524,6 +532,30 @@ int readAddressBook(addressBook * pTxl)
     }
 
     fclose(fd);
+
+    return ON_SUCCESS;
+}
+
+/* 销毁通讯录 */
+int addressBookDestroy(addressBook * pTxl)
+{
+    while (pTxl->size)
+    {
+        delNodeAppointPos(pTxl, pTxl->size);
+    }
+    
+    if (pTxl->head)
+    {
+        free(pTxl->head);
+        pTxl->head = NULL;
+    }
+
+    /* 在初始化时给结构体malloc了空间，所以在销毁时应该销毁此时给结构体分配的空间 */
+    if (pTxl)
+    {
+        free(pTxl);
+        pTxl = NULL;
+    }
 
     return ON_SUCCESS;
 }

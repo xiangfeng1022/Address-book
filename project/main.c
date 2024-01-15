@@ -24,7 +24,7 @@ enum USER_QUERY
 {
     QUERY_ALL = 1,
     QUERY_APPOINT,
-    EXIT,
+    QUERY_EXIT,
 };
 
 /* 查询依据 */
@@ -177,7 +177,7 @@ int main()
                     break;
                 
                 }
-                if (query == EXIT)
+                if (query == QUERY_EXIT)
                 {
                     break;
                 }
@@ -248,6 +248,7 @@ int main()
         if (choice == EXIT)
         {
             saveAddressBook(book);
+            addressBookDestroy(book);
             break;
         }
     }
